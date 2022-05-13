@@ -34,11 +34,15 @@ func NewResourceAdder(resources []corev1.ResourceName) *ResourceAdder {
 }
 
 // AddPodMetrics adds each pod metric to the total
-func (adder *ResourceAdder) AddPodMetrics(m *metricsapi.PodMetrics) {
+func (adder *ResourceAdder) AddPodMetrics(m *metricsapi.PodMetrics, cache map[string]*ResourceContainerInfo, enumerate bool) {
 	for _, c := range m.Containers {
+		container := &corev1.Container{}
+		if enumerate {
+			container = cache[c.Name].Container
+		}
 		for _, res := range adder.resources {
 			total := adder.total[res]
-			total.Add(c.Usage[res])
+			total.Add(extractResource(&c, container, res))
 			adder.total[res] = total
 		}
 	}

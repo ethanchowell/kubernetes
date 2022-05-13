@@ -168,6 +168,11 @@ func TestTopPod(t *testing.T) {
 			namespaces: []string{testNS, testNS, testNS},
 			containers: true,
 		},
+		{
+			name:       "pods with resource definitions",
+			options:    &TopPodOptions{Enumerate: true},
+			namespaces: []string{testNS, testNS},
+		},
 	}
 	cmdtesting.InitTestErrorHandler(t)
 	for _, testCase := range testCases {
